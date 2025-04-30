@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-zakaznik
+  namespace: bp-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-zakaznik
+  template:
+    metadata:
+      labels:
+        app: frontend-zakaznik
+    spec:
+      containers:
+      - name: frontend-zakaznik
+        image: localhost:5000/bp-fe-zakaznik:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
