@@ -2,12 +2,10 @@ FROM postgres:17.4-alpine
 RUN apk add --no-cache curl unzip
 RUN curl -fsSL https://bun.sh/install | bash
 
+COPY ./database/init-db.sh /docker-entrypoint-initdb.d/init-db.sh
 COPY ./database /opt/database
 
-WORKDIR /opt/database
-RUN /root/.bun/bin/bun install
-RUN /root/.bun/bin/bun drizzle-kit generate:pg
-RUN /root/.bun/bin/bun drizzle-kit push:pg
+RUN chmod +x /docker-entrypoint-initdb.d/init-db.sh
 
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=postgres

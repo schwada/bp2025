@@ -46,7 +46,7 @@ export default function Detail({ className, ...props }: React.ComponentPropsWith
 							{Object.values(EventType).map((eventType) => (
 								<DropdownMenuItem key={eventType} onClick={() => {
 									fetch(`${import.meta.env.VITE_API_URL}/api/requests/${id}/event`, {
-										method: "POST", body: JSON.stringify({ eventType })
+										method: "POST", body: JSON.stringify({ eventType }), credentials: "include"
 									}).then(res => res.json()).then(() => {
 										queryClient.invalidateQueries({ queryKey: ["requests"] })
 									})

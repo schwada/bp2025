@@ -16,12 +16,13 @@ export default function TicketForm({ className, setStep, setOrder, ...props }: R
 	const [email, setEmail] = useState("");
 	const [orderNumber, setOrderNumber] = useState("");
 	const getProductsMutation = useMutation({
-		mutationFn: () => fetch(`${import.meta.env.VITE_API_URL}/api/order?email=${email}&orderNumber=${orderNumber}`),
+		mutationFn: () => fetch(`${import.meta.env.VITE_API_URL}/api/order?email=${email}&orderNumber=${orderNumber}`).then(res => {
+			if(!res.ok) throw new Error("Email nebo číslo objednávky je chybné.");
+			return res.json();
+		}),
 		onSuccess:(res) => {
-			res.json().then(data => {
-				setOrder(data);
-				setStep(Step.Products);
-			});
+			setOrder(res);
+			setStep(Step.Products);
 		}
 	});
 

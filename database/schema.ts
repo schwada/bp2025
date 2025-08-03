@@ -1,4 +1,5 @@
-import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
+import { integer, jsonb, pgTable, varchar } from "drizzle-orm/pg-core";
+
 
 export enum EventType {
 	ISSUE_ENCOUNTERED = "ISSUE_ENCOUNTERED", 
@@ -36,11 +37,33 @@ export enum EventTitle {
 	RESOLVED = "Vaše žádost o vracení zboží byla vyřízena, v případě dalších dotazů nás můžete kontaktovat.",
 }
 
-
 export const usersTable = pgTable("users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  age: integer().notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
+	id: integer().primaryKey().generatedAlwaysAsIdentity(),
+	email: varchar({ length: 255 }).notNull().unique(),
+	password: varchar({ length: 255 }).notNull(),
 });
 export type User = typeof usersTable.$inferSelect;
+
+
+export const ordersTable = pgTable("orders", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity(),
+	orderNumber: varchar({ length: 255 }).notNull(),
+	email: varchar({ length: 255 }).notNull(),
+	paidAt: varchar({ length: 255 }).default(new Date().toISOString()).notNull(),
+	createdAt: varchar({ length: 255 }).default(new Date().toISOString()).notNull(),
+	orderStatus: varchar({ length: 255 }).notNull(),
+	products: jsonb().array().notNull(),
+});
+export type Product = { id: number; name: string; quantity: number; price: number; }
+export type Order = typeof ordersTable.$inferSelect;
+
+export const requestsTable = pgTable("requests", {
+	id: integer().primaryKey().generatedAlwaysAsIdentity(),
+	orderNumber: varchar({ length: 255 }).notNull(),
+	email: varchar({ length: 255 }).notNull(),
+	createdAt: varchar({ length: 255 }).default(new Date().toISOString()).notNull(),
+	products: jsonb().array().notNull(),
+	events: jsonb().array().notNull(),
+});
+export type Event = { date: string; type: EventType; };
+export type ReturnRequest = typeof requestsTable.$inferSelect;

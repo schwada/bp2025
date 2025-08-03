@@ -2,7 +2,7 @@ import { UseMutationResult, useMutation } from '@tanstack/react-query';
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
 interface AuthContextType {
-    user: { username: string } | null;
+    user: { email: string, id: number } | null;
 	isLoading: boolean;
 	loginMutation: UseMutationResult<any, Error, { email: string; password: string; }, unknown>;
 	checkAuthMutation: UseMutationResult<any, Error, void, unknown>;
@@ -11,7 +11,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<{ username: string } | null>(null);
+    const [user, setUser] = useState<{ email: string, id: number } | null>(null);
 	const checkAuthMutation = useMutation({
 		mutationFn: async () => {
 			const resp = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 			throw new Error('Failed to fetch auth status');
 		},
 		retry: false,
-		onSuccess: (data) => setUser(data.user),
+		onSuccess: (data) => setUser({ email: data.email, id: data.id }),
 		onError: () => setUser(null)
 	})
 

@@ -3,7 +3,13 @@
     "drizzle-kit": "^0.31.0",
     "drizzle-orm": "^0.42.0"
   },
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:seed": "bun seed.ts"
+  },
   "devDependencies": {
-    "@types/bun": "^1.2.9"
+    "@types/bun": "^1.2.12"
   }
 }

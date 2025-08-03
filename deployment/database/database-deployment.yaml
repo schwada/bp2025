@@ -21,6 +21,8 @@ spec:
         env:
         - name: POSTGRES_PASSWORD
           value: postgres
+        - name: DATABASE_URL
+          value: postgresql://postgres:postgres@localhost:5432/bp
         resources:
           requests:
             memory: "256Mi"
@@ -34,4 +36,4 @@ spec:
       volumes:
       - name: db-data
         persistentVolumeClaim:
-          claimName: db-pvc
+          claimName: bp-db-pvc

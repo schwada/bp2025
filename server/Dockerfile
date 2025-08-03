@@ -5,4 +5,4 @@ WORKDIR /opt/server
 RUN bun install
 
 EXPOSE 3000
-CMD ["bun", "run", "test.ts"] 
+CMD ["bun", "run", "src/index.ts"] 

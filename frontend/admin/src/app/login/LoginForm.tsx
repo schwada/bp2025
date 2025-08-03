@@ -38,12 +38,12 @@ export function LoginForm({className, ...props}: React.ComponentPropsWithoutRef<
 							<div className="grid gap-6">
 								<div className="grid gap-2">
 									<Label htmlFor="email">Email</Label>
-									<Input onChange={(e) => setEmail(e.target.value)}
+									<Input disabled={loginMutation.isPending} onChange={(e) => setEmail(e.target.value)}
 									id="email" type="email" placeholder="m@example.com" required />
 								</div>
 								<div className="grid gap-2">
 									<Label htmlFor="password">Heslo</Label>
-									<Input onChange={(e) => setPassword(e.target.value)}
+									<Input disabled={loginMutation.isPending} onChange={(e) => setPassword(e.target.value)}
 									id="password" type="password" placeholder="********" required />
 								</div>
 								<Button type="submit" disabled={loginMutation.isPending} className="w-full">Přihlásit se</Button>

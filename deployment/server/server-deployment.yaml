@@ -18,6 +18,9 @@ spec:
         image: localhost:5000/bp-server:latest
         ports:
         - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          value: postgresql://postgres:postgres@bp-database-service:5432/bp
         resources:
           requests:
             memory: "128Mi"

@@ -10,19 +10,30 @@ export default function ProductsForm({ className, order, ...props }: React.Compo
 
 	const navigate = useNavigate();
 	const createRequestMutation = useMutation({
-		mutationFn: () => fetch(`${import.meta.env.VITE_API_URL}/api/order?email=${order.email}&orderNumber=${order.orderNumber}`, {
+		mutationFn: () => fetch(`${import.meta.env.VITE_API_URL}/api/request?email=${order.email}&orderNumber=${order.orderNumber}`, {
 			method: "POST", body: JSON.stringify({ products: reasons })
+		}).then(res => {
+			if(!res.ok) throw new Error();
+			return res.json();
 		}),
 		onSuccess: async (res) => {
-			const data = await res.json();
-			navigate("/pozadavek/" + data.id);
+			navigate("/pozadavek/" + res.id);
 		},
 		onError: (error) => {
 			console.error(error);
 		}
 	});
 
-	const [ reasons, setReasons ] = useState({});
+	const [ reasons, setReasons ] = useState<Record<string, string>>({});
+	const setProductReason = (productId: string, reason: string) => {
+		if(reason === "-") {
+			const newReasons = {...reasons};
+			delete newReasons[productId];
+			setReasons(newReasons);
+		} else { 
+			setReasons({...reasons, [productId]: reason});
+		}
+	}
 	const submit = () => {
 		console.log(reasons,order);
 		createRequestMutation.mutate();
@@ -42,19 +53,27 @@ export default function ProductsForm({ className, order, ...props }: React.Compo
 								<div className="flex items-center gap-2 rounded-md border p-4">
 									<div className="h-12 w-12 rounded-md bg-gray-200" />
 									<div className="flex flex-col">
-										<p className="text-sm font-medium">Bratislava</p>
-										<p className="text-sm text-muted-foreground">52$</p>
+										<p className="flex text-sm gap-2 font-medium">
+											<span>{product.name}</span>
+											<span className="text-muted-foreground">
+												{product.quantity} ks
+											</span>
+										</p>
+										<p className="text-sm text-muted-foreground">{product.price} Kč</p>
 									</div>
 								</div>
 								<div className="flex gap-2 items-center">
-									<Select onValueChange={(value) => setReasons({...reasons, [product.id]: value})}>
+									<Select defaultValue={"-"} onValueChange={(value) => setProductReason(product.id, value)}>
 										<SelectTrigger className="w-full">
 											<SelectValue placeholder="Vyberte důvod vrácení" />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="light">Light</SelectItem>
-											<SelectItem value="dark">Dark</SelectItem>
-											<SelectItem value="system">System</SelectItem>
+											<SelectItem value="too-big">Moc velke</SelectItem>
+											<SelectItem value="too-small">Moc malé</SelectItem>
+											<SelectItem value="other">Jiný</SelectItem>
+											<SelectItem value="-">
+												<span className="text-muted-foreground">Vyberte důvod</span>
+											</SelectItem>
 										</SelectContent>
 									</Select>
 								</div>

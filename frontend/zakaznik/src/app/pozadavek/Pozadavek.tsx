@@ -10,7 +10,10 @@ export default function Pozadavek({ className, ...props }: React.ComponentPropsW
 	const { data, isLoading, error } = useQuery({
 		retry: 2, throwOnError: false,
 		queryKey: ["request", id],
-		queryFn: () => fetch(`${import.meta.env.VITE_API_URL}/api/request/${id}`).then(res => res.json()),
+		queryFn: () => fetch(`${import.meta.env.VITE_API_URL}/api/request/${id}`).then(res => {
+			if (!res.ok) throw new Error();
+			return res.json();
+		}),
 	});
 
 	if (isLoading || error) return (	

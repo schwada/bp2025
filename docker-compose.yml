@@ -43,7 +43,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgres://postgres:postgres@bp-database:5432/bp
+      - DATABASE_URL=postgresql://postgres:postgres@bp-database-service:5432/bp
     depends_on:
       - bp-database
 

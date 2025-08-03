@@ -44,7 +44,7 @@ export const columns: ColumnDef<RequestRecord>[] = [
 					{Object.values(EventType).map((eventType) => (
 						<DropdownMenuItem className="cursor-pointer" key={eventType} onClick={() => {
 							fetch(`${import.meta.env.VITE_API_URL}/api/requests/${row.original.id}/event`, {
-								method: "POST", body: JSON.stringify({ eventType })
+								method: "POST", credentials: "include", body: JSON.stringify({ eventType })
 							}).then(res => res.json()).then(() => {
 								queryClient.invalidateQueries({ queryKey: ["requests"] })
 							})
